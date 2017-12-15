@@ -22,7 +22,7 @@ all_csvs <- dir(path_to_raw, recursive=T, pattern = ".csv")
 state_data <- grep("State", all_csvs, value=T)
 district_data <- all_csvs[!all_csvs %in% state_data]
 
-#Collate 13-14 and beyond data (this does not contain state data)
+#Collate 13-14 and beyond data
 all_xlsx <- dir(path_to_raw, recursive=T, pattern = ".xlsx")
 
 #Process district_data: 08-09 thru 12-13
@@ -186,12 +186,23 @@ KEI_final <- KEI_backfill_long %>%
   select(District, FIPS, Year, `Skill Domain`, `Skill Level`, `Measure Type`, Variable, Value) %>% 
   arrange(District, Year, `Skill Domain`, `Skill Level`, `Measure Type`)
 
-#Set '*' to -6666 so we can round the Value column
-KEI_final$Value[KEI_final$Value == "*"] <- -6666
+#Set '*' to -9999 so we can round the Value column
+KEI_final$Value[KEI_final$Value == "*"] <- -9999
+
+#Set blank FIPS to ""
+KEI_final$FIPS[is.na(KEI_final$FIPS)] <- ""
 
 #Now round Value column
 KEI_final$Value <- round(as.numeric(KEI_final$Value), 2)
 
+#Write CSV
+write.table(
+  KEI_final,
+  file.path(getwd(), "data", "kindergarten-entrance-inventory-2017.csv"),
+  sep = ",",
+  row.names = F, 
+  na = "-6666"
+)
 
 
 
