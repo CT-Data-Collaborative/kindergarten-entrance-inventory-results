@@ -1,7 +1,8 @@
 Kindergarten Entrance Inventory Results
 
-[![Build Status](https://travis-ci.org/CT-Data-Collaborative/kindergarten-entrance-inventory-results.svg?branch=master)](https://travis-ci.org/CT-Data-Collaborative/kindergarten-entrance-inventory-results)
 Kindergarten Skills Inventory Results reports the number and percentage of kindergarten students, per inventory domain skill level.
+
+Data Source: <http://edsight.ct.gov/>
 
 ## License MIT
 
