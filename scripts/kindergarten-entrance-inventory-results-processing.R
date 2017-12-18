@@ -158,8 +158,41 @@ KEI_backfill <- KEI_backfill %>%
          `Level 2 Num` = round(as.numeric(`Number of Students Tested`)*(as.numeric(`Level 2`)/100), 0),
          `Level 3 Num` = round(as.numeric(`Number of Students Tested`)*(as.numeric(`Level 3`)/100), 0))
 
+#Set '*' to -9999 so we can set columns to numeric
+KEI_backfill[KEI_backfill == "*"] <- -9999
+
+#Suppress N values less than 20, and corresponding percents 
+KEI_backfill_suppress <- KEI_backfill
+
+cols <- c("Number of Students Tested", 
+          "Level 1", "Level 2", "Level 3", 
+          "Level 1 Num", "Level 2 Num", "Level 3 Num")
+
+KEI_backfill_suppress[cols] <- sapply(KEI_backfill_suppress[cols],as.numeric)
+
+#If Total < 20, all columns get suppressed
+KEI_backfill_suppress$`Level 1`[KEI_backfill_suppress$`Number of Students Tested` < 20] <- -9999
+KEI_backfill_suppress$`Level 2`[KEI_backfill_suppress$`Number of Students Tested` < 20] <- -9999
+KEI_backfill_suppress$`Level 3`[KEI_backfill_suppress$`Number of Students Tested` < 20] <- -9999
+KEI_backfill_suppress$`Level 1 Num`[KEI_backfill_suppress$`Number of Students Tested` < 20] <- -9999
+KEI_backfill_suppress$`Level 2 Num`[KEI_backfill_suppress$`Number of Students Tested` < 20] <- -9999
+KEI_backfill_suppress$`Level 3 Num`[KEI_backfill_suppress$`Number of Students Tested` < 20] <- -9999
+
+#If Lvl # < 20, Lvl % gets suppressed
+KEI_backfill_suppress$`Level 1`[KEI_backfill_suppress$`Level 1 Num` < 20] <- -9999
+KEI_backfill_suppress$`Level 2`[KEI_backfill_suppress$`Level 2 Num` < 20] <- -9999
+KEI_backfill_suppress$`Level 3`[KEI_backfill_suppress$`Level 3 Num` < 20] <- -9999
+
+#If Lvl # < 20, Lvl # gets suppressed
+KEI_backfill_suppress$`Level 1 Num`[KEI_backfill_suppress$`Level 1 Num` < 20] <- -9999
+KEI_backfill_suppress$`Level 2 Num`[KEI_backfill_suppress$`Level 2 Num` < 20] <- -9999
+KEI_backfill_suppress$`Level 3 Num`[KEI_backfill_suppress$`Level 3 Num` < 20] <- -9999
+
+#If Total < 20, Total gets suppressed
+KEI_backfill_suppress$`Number of Students Tested`[KEI_backfill_suppress$`Number of Students Tested` < 20] <- -9999
+
 #Convert wide to long
-KEI_backfill_long <- gather(KEI_backfill, "Variable", "Value", c(4:7, 9:11))
+KEI_backfill_long <- gather(KEI_backfill_suppress, "Variable", "Value", c(4:7, 9:11))
 
 #Configure Level and MT columns based on Variable column
 KEI_backfill_long$Level <- "Total Tested"
@@ -186,9 +219,6 @@ KEI_final <- KEI_backfill_long %>%
   select(District, FIPS, Year, `Skill Domain`, `Skill Level`, `Measure Type`, Variable, Value) %>% 
   arrange(District, Year, `Skill Domain`, `Skill Level`, `Measure Type`)
 
-#Set '*' to -9999 so we can round the Value column
-KEI_final$Value[KEI_final$Value == "*"] <- -9999
-
 #Set blank FIPS to ""
 KEI_final$FIPS[is.na(KEI_final$FIPS)] <- ""
 
@@ -203,12 +233,4 @@ write.table(
   row.names = F, 
   na = "-6666"
 )
-
-
-
-
-
-
-
-
 

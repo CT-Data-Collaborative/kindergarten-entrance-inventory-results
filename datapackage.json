@@ -21,7 +21,7 @@
   }],
   "contributor": [],
   "resources": [{
-    "path": "data/data.csv",
+    "path": "data/kindergarten-entrance-inventory-2017.csv",
     "format": "csv",
     "schema": {
       "fields": [{
@@ -37,13 +37,50 @@
           "type": "string",
           "dimension": false
         }, {
+          "name": "Skill Domain",
+          "type": "string",
+          "dimension": true, 
+          "constraints": {
+		        "enum": [
+              "Creative/Aesthetic",
+              "Language",
+              "Literacy",
+              "Numeracy",
+              "Personal/Social",
+              "Physical/Motor"
+            ]
+			    }
+        }, {   
+          "name": "Skill Level",
+          "type": "string",
+          "dimension": true, 
+          "constraints": {
+		        "enum": [
+              "Level 1", 
+              "Level 2", 
+              "Level 3",
+              "Total Tested"
+            ]
+			    }
+        }, {            
           "name": "Measure Type",
           "type": "string",
-          "dimension": true
+          "dimension": true, 
+          "constraints": {
+		        "enum": [
+              "Number", 
+              "Percent"
+            ]
+			    }
         }, {
           "name": "Variable",
           "type": "string",
-          "dimension": true
+          "dimension": true, 
+          "constraints": {
+		        "enum": [
+              "Kindergarten Entrance Inventory Results"
+            ]
+			    }
         }, {
           "name": "Value",
           "type": "number",
@@ -52,21 +89,21 @@
       }
     }
   ],
-  "last_modified": "12/15/2017",
+  "last_modified": "12/18/2017",
   "ckan_extras": {
     "full_description": {
       "ckan_name": "Full Description",
-      "value": "The inventory gathers information about the academic skill and behavior of kindergartners. Six domains of early childhood development are collected":" language skills, literacy skills, numeracy skills, physical/motor skills, creative/aesthetic skills and personal/social skills. Performance in each domain is measured from levels 1 through 3, with level 3 indicating that the student requires minimal additional support. Scores are assigned based on teachers' observations. The inventory aggregates individual teacher observations of incoming kindergarteners across the six domains and combines the assigned scores into an unweighted quartile score. Connecticut State Department of Education collects scores annually, in the fall of each year. CTdata.org carries annual data. SDE stopped calculating a value for Connecticut as whole because some districts were granted a waiver in 2013-2014 to opt out. As such, the state value would be an under reported score.",
+      "value": "The inventory gathers information about the academic skill and behavior of kindergartners. Six domains of early childhood development are collected: language skills, literacy skills, numeracy skills, physical/motor skills, creative/aesthetic skills and personal/social skills. Performance in each domain is measured from levels 1 through 3, with level 3 indicating that the student requires minimal additional support. Scores are assigned based on teachers' observations. The inventory aggregates individual teacher observations of incoming kindergarteners across the six domains and combines the assigned scores into an unweighted quartile score. Connecticut State Department of Education collects scores annually, in the fall of each year. CTdata.org carries annual data. SDE stopped calculating a value for Connecticut as whole because some districts were granted a waiver in 2013-2014 to opt out. As such, the state value would be an under reported score.",
       "type": "string"
     },
     "suppression": {
       "ckan_name": "Suppression",
-      "value": "",
+      "value": "Combinations resulting in counts of less than 20 students are suppressed.",
       "type": "string"
     },
     "technical_notes": {
       "ckan_name": "Technical Notes",
-      "value": "Technical notes for advanced users",
+      "value": "",
       "type": "string"
     },
     "socrata": {
@@ -78,7 +115,8 @@
       "ckan_name": "Socrata Dataset URL",
       "value": "",
       "type": "string"
-    },"0socrata_dataset_name": {
+    },
+    "socrata_dataset_name": {
       "ckan_name": "Socrata Dataset Name",
       "value": "",
       "type": "string"
@@ -91,6 +129,16 @@
     "subdomain": {
       "ckan_name": "Subdomain",
       "value": "Kindergarten Readiness",
+      "type": "string"
+    },
+    "numerator": {
+      "ckan_name": "Numerator",
+      "value": "Number of students per Domain/Skill combination.",
+      "type": "string"
+    },     
+    "denominator": {
+      "ckan_name": "Denominator",
+      "value": "Total students tested.",
       "type": "string"
     },
     "geography": {
@@ -106,7 +154,7 @@
     },
     "years_in_catalog": {
       "ckan_name": "Years in Catalog",
-      "value": [],
+      "value": ["2008-2009", "2009-2010", "2010-2011", "2011-2012", "2012-2013", "2013-2014", "2014-2015", "2015-2016", "2016-2017"],
       "type": "array"
     },
     "latest_year": {
@@ -127,11 +175,191 @@
         "Percent": "%"
       }
     },
-    "default": {}
+    "expected_number_of_geographies": {
+		  "ckan_name": "Expected Number of Unique Geographies",
+		  "value": 205,
+		  "type": "string"
+		},     
+    "default": {      
+      "ckan_name": "Default",
+			"value": {
+		 		"District": "Connecticut",
+		 		"Year": ["2016-2017"],
+				"Measure Type": "Percent",
+		 		"Variable": "Kindergarten Entrance Inventory Results"
+			},
+		  	"type": "object"
+    }  
   },
-  "spot_checks": [],
+  "spot_checks": [
+    {
+      "type": "$lookup",
+      "filter": {
+        "District": "Connecticut",
+        "Year": "2010-2011",
+        "Variable": "Kindergarten Entrance Inventory Results",
+        "Skill Domain": "Language",
+        "Skill Level": "Total Tested",
+        "Measure Type": "Number" 
+      },
+      "expected": {
+        "type": "$match",
+        "number type": "int",
+        "value": 35603
+      } 
+    }, 
+    {
+      "type": "$lookup",
+      "filter": {
+        "District": "Connecticut",
+        "Year": "2011-2012",
+        "Variable": "Kindergarten Entrance Inventory Results",
+        "Skill Domain": "Numeracy",
+        "Skill Level": "Level 1",
+        "Measure Type": "Percent" 
+      },
+      "expected": {
+        "type": "$match",
+        "number type": "float",
+        "value": 19.5
+      } 
+    }, 
+    {
+      "type": "$lookup",
+      "filter": {
+        "District": "Connecticut",
+        "Year": "2015-2016",
+        "Variable": "Kindergarten Entrance Inventory Results",
+        "Skill Domain": "Creative/Aesthetic",
+        "Skill Level": "Level 3",
+        "Measure Type": "Number" 
+      },
+      "expected": {
+        "type": "$match",
+        "number type": "int",
+        "value": -6666
+      } 
+    }, 
+    {
+      "type": "$lookup",
+      "filter": {
+        "District": "South Windsor School District",
+        "Year": "2013-2014",
+        "Variable": "Kindergarten Entrance Inventory Results",
+        "Skill Domain": "Personal/Social",
+        "Skill Level": "Level 2",
+        "Measure Type": "Percent" 
+      },
+      "expected": {
+        "type": "$match",
+        "number type": "float",
+        "value": 30.48
+      } 
+    },  
+    {
+      "type": "$lookup",
+      "filter": {
+        "District": "Chaplin School District",
+        "Year": "2014-2015",
+        "Variable": "Kindergarten Entrance Inventory Results",
+        "Skill Domain": "Physical/Motor",
+        "Skill Level": "Total Tested",
+        "Measure Type": "Number" 
+      },
+      "expected": {
+        "type": "$match",
+        "number type": "int",
+        "value": -6666
+      } 
+    },  
+    {
+      "type": "$lookup",
+      "filter": {
+        "District": "Booker T Washington Academy District",
+        "Year": "2008-2009",
+        "Variable": "Kindergarten Entrance Inventory Results",
+        "Skill Domain": "Literacy",
+        "Skill Level": "Total Tested",
+        "Measure Type": "Number" 
+      },
+      "expected": {
+        "type": "$match",
+        "number type": "int",
+        "value": -6666
+      } 
+    },  
+    {
+      "type": "$lookup",
+      "filter": {
+        "District": "Regional School District 06",
+        "Year": "2010-2011",
+        "Variable": "Kindergarten Entrance Inventory Results",
+        "Skill Domain": "Physical/Motor",
+        "Skill Level": "Level 1",
+        "Measure Type": "Number" 
+      },
+      "expected": {
+        "type": "$match",
+        "number type": "int",
+        "value": -9999
+      } 
+    },    
+    {
+      "type": "$lookup",
+      "filter": {
+        "District": "Bolton School District",
+        "Year": "2014-2015",
+        "Variable": "Kindergarten Entrance Inventory Results",
+        "Skill Domain": "Literacy",
+        "Skill Level": "Level 1",
+        "Measure Type": "Percent" 
+      },
+      "expected": {
+        "type": "$match",
+        "number type": "float",
+        "value": 7.3
+      } 
+    }     
+  ],
   "dimension_groups": [
-    {"Measure Type": []},
-    {"Variable": []}
+    {
+      "Measure Type": ["Number"],        
+      "Skill Domain": [
+              "Creative/Aesthetic",
+              "Language",
+              "Literacy",
+              "Numeracy",
+              "Personal/Social",
+              "Physical/Motor"          
+      ],   
+      "Skill Level": [
+              "Level 1", 
+              "Level 2", 
+              "Level 3",
+              "Total Tested"          
+      ],   
+      "Variable": [
+        "Kindergarten Entrance Inventory Results"          
+      ]
+    },
+    {
+      "Measure Type": ["Percent"],        
+      "Skill Domain": [
+              "Creative/Aesthetic",
+              "Language",
+              "Literacy",
+              "Numeracy",
+              "Personal/Social",
+              "Physical/Motor"          
+      ],   
+      "Skill Level": [
+              "Level 1", 
+              "Level 2", 
+              "Level 3"         
+      ],   
+      "Variable": [
+        "Kindergarten Entrance Inventory Results"          
+      ]
+    }
   ]
 }
