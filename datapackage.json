@@ -2,7 +2,7 @@
   "name": "kindergarten-entrance-inventory-results",
   "datapackage_version": "1.0-beta.18",
   "title": "Kindergarten Entrance Inventory Results",
-  "description": "Kindergarten Skills Inventory Results reports the number and percentage of kindergarten students, per inventory domain skill level.",
+  "description": "Kindergarten Entrance Inventory Results reports the number and percentage of kindergarten students, per inventory domain skill level.",
   "version": "1.0",
   "licenses": [{
     "url": "http://opendatacommons.org/licenses/pddl/",
