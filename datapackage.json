@@ -98,7 +98,7 @@
     },
     "suppression": {
       "ckan_name": "Suppression",
-      "value": "Combinations resulting in counts of less than 20 students are suppressed.",
+      "value": "Combinations resulting in counts of less than 20 students are suppressed and denoted with an '*' or a -9999 in the raw data view. Missing values have been denoted with -6666.",
       "type": "string"
     },
     "technical_notes": {
