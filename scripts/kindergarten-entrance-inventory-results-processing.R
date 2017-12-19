@@ -66,17 +66,15 @@ file2[,2] <- NULL
 
 file2[] <- as.data.frame(lapply(file2, gsub, pattern='%', replacement=''))
 state_file2 <- file2[file2$districtname == "State",]
-state_file2 <- gather(state_file2, Variable, Value, 2:20)
-state_file2 <- state_file2[state_file2$Variable != "districtname",]
+state_file2 <- gather(state_file2, Variable, Value, 3:20)
+#state_file2 <- state_file2[state_file2$Variable != "districtname",]
 state_file2$Value <- as.numeric(state_file2$Value)*100
 state_file2 <- spread(state_file2, "Variable", "Value")
 state_file2$districtname <- "Connecticut"
 
-file2 <- rbind(file2, state_file2)
-file2 <- file2[file2$districtname != "State",]
-
 #Combine years
-district2 <- rbind(file1, file2)
+district2 <- rbind(file1, file2, state_file2)
+district2 <- district2[district2$districtname != "State",]
 
 #Step 1: Wide to Long
 district2 <- gather(district2, Variable, Value, 2:19)
